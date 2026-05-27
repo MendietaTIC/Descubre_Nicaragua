@@ -1,5 +1,5 @@
 // CONFIGURACIÓN DE TU API DE GEMINI (Utiliza tu clave aquí)
-const API_KEY = "AIzaSyDZESzTAhwhRNgPN5pxL84nmL73zeOKxv0"; 
+const API_KEY = "AIzaSyATsA6JGdg_kYoSS4xVZR_vnohax1lu5dk"; 
 
 // Elementos de la interfaz
 const video = document.getElementById('camera-feed');
