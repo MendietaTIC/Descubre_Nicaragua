@@ -478,18 +478,3 @@ function deletePlace(id) {
     loadSavedPlaces();
 
 }
-
-
-// ===============================
-// INICIAR APP
-// ===============================
-
-window.addEventListener('load', () => {
-
-    if (document.getElementById('view-scanner')) {
-
-        switchView('view-scanner');
-
-    }
-
-});
