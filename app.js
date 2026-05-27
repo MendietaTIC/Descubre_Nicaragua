@@ -1,6 +1,3 @@
-// CONFIGURACIÓN DE TU API DE GEMINI (Utiliza tu clave aquí)
-const API_KEY = "AIzaSyATsA6JGdg_kYoSS4xVZR_vnohax1lu5dk"; 
-
 // Elementos de la interfaz
 const video = document.getElementById('camera-feed');
 const preview = document.getElementById('photo-preview');
@@ -121,6 +118,7 @@ btnRetake.addEventListener('click', () => {
 
 // Conexión a Gemini Vision API (CORREGIDO PARA IMÁGENES)
 async function enviarAGemini(base64Image) {
+
     loader.style.display = "block";
     resultContainer.style.display = "none";
 
@@ -128,13 +126,97 @@ async function enviarAGemini(base64Image) {
     Analiza esta foto sabiendo que las coordenadas de geolocalización aproximadas son: ${userCoords}.
     Cruza la información visual con el GPS de forma estricta para determinar con precisión lagos, ríos, volcanes o monumentos nicaragüenses específicos.
 
-    Responde en formato HTML estructurado (usa etiquetas <p>, <strong>, etc.) con los siguientes puntos fijos:
-    - <strong>¿Es de Nicaragua?</strong>: (Sí o No)
-    - <strong>Elemento detectado</strong>: (Nombre oficial)
-    - <strong>Ubicación</strong>: (Departamento o región de Nicaragua)
-    - <strong>Historia y Descripción</strong>: (Explicación rica sobre su contexto histórico o valor turístico nicaragüense).
+    Responde en formato HTML estructurado usando:
+    <p>, <strong>, <br>
 
-    Si NO pertenece a Nicaragua, acláralo amablemente y explica el motivo físico o geográfico detectado.`;
+    Incluye:
+    - ¿Es de Nicaragua?
+    - Elemento detectado
+    - Ubicación
+    - Historia y descripción
+
+    Si NO pertenece a Nicaragua explícalo amablemente.`;
+
+    try {
+
+        const response = await fetch("/.netlify/functions/gemini", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [
+                        { text: prompt },
+                        {
+                            inlineData: {
+                                mimeType: "image/jpeg",
+                                data: base64Image
+                            }
+                        }
+                    ]
+                }]
+            })
+        });
+
+        const data = await response.json();
+
+        console.log(data);
+
+        if (
+            data.candidates &&
+            data.candidates[0] &&
+            data.candidates[0].content &&
+            data.candidates[0].content.parts
+        ) {
+
+            const textoRespuesta =
+                data.candidates[0].content.parts[0].text;
+
+            resultText.innerHTML = textoRespuesta;
+
+            resultContainer.style.display = "block";
+
+            currentScanResult = {
+                id: Date.now(),
+                fecha: new Date().toLocaleDateString('es-NI'),
+                htmlContent: textoRespuesta
+            };
+
+            btnSaveCurrent.style.display = "block";
+
+        } else {
+
+            resultText.innerHTML = `
+                <p>
+                    <strong>Error:</strong>
+                    Gemini no devolvió una respuesta válida.
+                </p>
+            `;
+
+            resultContainer.style.display = "block";
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        resultText.innerHTML = `
+            <p>
+                <strong>Error:</strong>
+                ${error.message}
+            </p>
+        `;
+
+        resultContainer.style.display = "block";
+
+    } finally {
+
+        loader.style.display = "none";
+
+    }
+
+} 
 
     // ENDPOINT CORREGIDO: gemini-1.5-flash es el modelo multimodal gratuito
     const url = `https://googleapis.com{API_KEY}`;
