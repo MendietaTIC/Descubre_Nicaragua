@@ -1,0 +1,275 @@
+:root {
+    --primary: #0052a5;       /* Azul Escudo de Nicaragua */
+    --primary-dark: #003974;
+    --accent: #d4af37;        /* Dorado detalles de la bandera/escudo */
+    --bg: #f5f7fa;
+    --card-bg: #ffffff;
+    --text: #2d3748;
+    --text-muted: #718096;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* Manejo de Vistas */
+.view {
+    display: none;
+    width: 100%;
+    max-width: 480px;
+    padding: 20px;
+    animation: fadeIn 0.4s ease-in-out forwards;
+}
+
+.view.active {
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Botones Generales */
+.btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn:hover { background-color: var(--primary-dark); }
+
+.btn-secondary { background-color: var(--text-muted); }
+.btn-secondary:hover { background-color: #4a5568; }
+
+.btn-outline {
+    background: transparent;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+}
+.btn-outline:hover { background: #edf2f7; }
+
+/* Vista Bienvenida */
+#view-welcome {
+    justify-content: center;
+    align-items: center;
+}
+
+.welcome-card {
+    background: var(--card-bg);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    width: 100%;
+}
+
+.flag-stripe {
+    height: 8px;
+    background: linear-gradient(90deg, #0052a5 0%, #ffffff 50%, #0052a5 100%);
+}
+
+.welcome-content {
+    padding: 40px 24px;
+    text-align: center;
+}
+
+.main-icon {
+    font-size: 64px;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+.welcome-content h1 {
+    font-size: 24px;
+    margin-bottom: 12px;
+    color: var(--primary-dark);
+}
+
+.welcome-content p {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* Menú Principal */
+.app-header, .section-header {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.app-header h2 { color: var(--primary); font-size: 26px; }
+.app-header p { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
+
+.menu-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.menu-card {
+    background: var(--card-bg);
+    border: none;
+    padding: 24px;
+    border-radius: 18px;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.menu-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+
+.menu-card i {
+    font-size: 28px;
+    color: var(--accent);
+    margin-bottom: 12px;
+}
+
+.menu-card h3 { color: var(--primary-dark); font-size: 18px; margin-bottom: 6px; }
+.menu-card p { color: var(--text-muted); font-size: 14px; line-height: 1.4; }
+
+/* Sección Cabeceras Interiores */
+.section-header {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 10px 0;
+}
+
+.btn-back {
+    position: absolute;
+    left: 0;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    color: var(--text);
+    cursor: pointer;
+    padding: 8px;
+}
+
+.section-header h2 { width: 100%; font-size: 20px; color: var(--primary-dark); }
+
+/* Cámara y Contenedor Escáner */
+.media-box {
+    width: 100%;
+    height: 280px;
+    background: #000;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 16px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+#camera-feed, #photo-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#photo-preview { display: none; }
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Loader animado */
+.loader-box {
+    display: none;
+    text-align: center;
+    padding: 20px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 82, 165, 0.1);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loader-box p { font-size: 14px; color: var(--primary); font-weight: 500; }
+
+/* Tarjeta de Resultados */
+.result-card {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    text-align: left;
+    display: none;
+    border-left: 5px solid var(--accent);
+}
+
+.result-card p { margin-bottom: 12px; line-height: 1.5; font-size: 15px; }
+.result-card strong { color: var(--primary-dark); }
+
+.btn-save { background-color: #27ae60; margin-top: 15px; }
+.btn-save:hover { background-color: #219653; }
+
+/* Lista de Guardados */
+.disclaimer { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; text-align: center;}
+
+.saved-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.saved-item {
+    background: var(--card-bg);
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    position: relative;
+    border-left: 4px solid var(--primary);
+}
+
+.saved-item h4 { color: var(--primary-dark); margin-bottom: 4px; font-size: 16px;}
+.saved-item span { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 6px;}
+.saved-item p { font-size: 14px; line-height: 1.4; color: var(--text); }
+
+.btn-delete {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #e74c3c;
+    cursor: pointer;
+    font-size: 16px;
+}

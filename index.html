@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descubre Nicaragua IA</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Iconos limpios desde CDN -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+</head>
+<body>
+
+    <!-- PANTALLA DE BIENVENIDA -->
+    <div id="view-welcome" class="view active">
+        <div class="welcome-card">
+            <div class="flag-stripe"></div>
+            <div class="welcome-content">
+                <i class="fa-solid fa-map-location-dot main-icon"></i>
+                <h1>¡Bienvenido a Nicaragua!</h1>
+                <p>Explora la tierra de lagos y volcanes. Escanea monumentos, sitios históricos o artesanías para descubrir su legado con Inteligencia Artificial.</p>
+                <button class="btn" onclick="switchView('view-menu')">Empezar a Explorar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MENÚ PRINCIPAL -->
+    <div id="view-menu" class="view">
+        <header class="app-header">
+            <h2>Guía Turístico IA 🇳🇮</h2>
+            <p>Selecciona una opción para iniciar</p>
+        </header>
+        
+        <div class="menu-grid">
+            <button class="menu-card" onclick="switchView('view-scanner')">
+                <i class="fa-solid fa-camera-retro"></i>
+                <h3>Escanear Destino</h3>
+                <p>Toma una foto o sube una imagen para analizar su historia.</p>
+            </button>
+
+            <button class="menu-card" onclick="switchView('view-saved'); loadSavedPlaces();">
+                <i class="fa-solid fa-bookmark"></i>
+                <h3>Lugares Guardados</h3>
+                <p>Revisa tus descubrimientos guardados temporalmente.</p>
+            </button>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DEL ESCÁNER -->
+    <div id="view-scanner" class="view">
+        <header class="section-header">
+            <button class="btn-back" onclick="switchView('view-menu')"><i class="fa-solid fa-arrow-left"></i></button>
+            <h2>Escáner de Historia</h2>
+        </header>
+
+        <div class="scanner-container">
+            <div class="media-box">
+                <video id="camera-feed" autoplay playsinline></video>
+                <img id="photo-preview" alt="Vista previa">
+                <canvas id="capture-canvas" style="display:none;"></canvas>
+            </div>
+
+            <div class="controls">
+                <!-- Botón para usar cámara en vivo -->
+                <button id="btn-capture" class="btn"><i class="fa-solid fa-circle-dot"></i> Capturar Foto</button>
+                
+                <!-- Alternativa para subir archivo desde galería -->
+                <label for="file-upload" class="btn btn-outline" id="label-upload">
+                    <i class="fa-solid fa-image"></i> Subir de Galería
+                </label>
+                <input type="file" id="file-upload" accept="image/*" style="display: none;">
+
+                <button id="btn-retake" class="btn btn-secondary" style="display:none;"><i class="fa-solid fa-rotate-right"></i> Escanear Otro</button>
+            </div>
+
+            <div id="loader" class="loader-box">
+                <div class="spinner"></div>
+                <p>Ubicando coordenadas y consultando con la IA...</p>
+            </div>
+
+            <div id="resultado-container" class="result-card">
+                <div id="resultado-texto"></div>
+                <button id="btn-save-current" class="btn btn-save" style="display:none;">
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar en mi Álbum
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DE LUGARES GUARDADOS -->
+    <div id="view-saved" class="view">
+        <header class="section-header">
+            <button class="btn-back" onclick="switchView('view-menu')"><i class="fa-solid fa-arrow-left"></i></button>
+            <h2>Tu Álbum Temporal</h2>
+        </header>
+
+        <div class="saved-container">
+            <p class="disclaimer">Los elementos se guardan localmente en este navegador.</p>
+            <div id="saved-list" class="saved-list">
+                <!-- Se llena dinámicamente desde JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
