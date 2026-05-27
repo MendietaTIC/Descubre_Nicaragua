@@ -7,7 +7,7 @@ exports.handler = async (event) => {
         const body = JSON.parse(event.body);
 
         const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
             {
                 method: "POST",
                 headers: {
@@ -19,12 +19,19 @@ exports.handler = async (event) => {
 
         const data = await response.json();
 
+        console.log("RESPUESTA GEMINI:", JSON.stringify(data));
+
         return {
             statusCode: 200,
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(data)
         };
 
     } catch (error) {
+
+        console.log(error);
 
         return {
             statusCode: 500,
