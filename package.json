@@ -2,3 +2,8 @@
   "name": "gemini-netlify",
   "version": "1.0.0"
 }
+{
+  "error":{
+     "message":"API key invalid"
+  }
+}
