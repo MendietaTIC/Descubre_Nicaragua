@@ -478,3 +478,19 @@ function deletePlace(id) {
     loadSavedPlaces();
 
 }
+
+// ===============================
+// INICIAR APP
+// ===============================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const firstView = document.querySelector(".view");
+
+    if (firstView) {
+
+        firstView.classList.add("active");
+
+    }
+
+});
