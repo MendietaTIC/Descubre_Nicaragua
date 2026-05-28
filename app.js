@@ -317,8 +317,6 @@ async function enviarAGemini(base64Image) {
 
         console.log(data);
 
-        console.log(data);
-
 let textoRespuesta = "";
 
 try {
