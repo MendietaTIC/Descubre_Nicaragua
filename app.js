@@ -245,27 +245,11 @@ async function enviarAGemini(base64Image) {
 
     const prompt = `
     Eres un experto historiador y guía turístico de Nicaragua.
-
     Analiza esta imagen utilizando también esta ubicación:
-    ${userCoords}
-
-    Detecta:
-    volcanes,
-    lagos,
-    ciudades,
-    monumentos,
-    iglesias,
-    lugares históricos o turísticos.
-
-    Responde en HTML usando:
-    <p>, <strong>, <br>
-
+    ${userCoords}    Detecta:   lugares históricos o turísticos.
+    Responde en HTML usando:    <p>, <strong>, <br>
     Incluye:
-    - ¿Es de Nicaragua?
-    - Lugar detectado
-    - Departamento
-    - Historia
-    - Descripción turística
+    - Lugar detectado con Breve Historia y pequeña Descripción turística
     `;
 
     try {
