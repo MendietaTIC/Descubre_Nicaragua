@@ -240,38 +240,26 @@ btnRetake.addEventListener('click', () => {
 async function enviarAGemini(base64Image) {
 
     loader.style.display = "block";
-
     resultContainer.style.display = "none";
 
     const prompt = `
     Eres un historiador experto y guía turístico de Nicaragua.
 
-    Analiza esta foto sabiendo que las coordenadas aproximadas son:
+    Analiza esta foto usando también esta ubicación aproximada:
     ${userCoords}
 
-    Detecta:
-    volcanes,
-    lagos,
-    monumentos,
-    ciudades,
-    paisajes turísticos,
-    iglesias,
-    sitios históricos de Nicaragua.
+    Detecta lugares turísticos, volcanes, lagos,
+    monumentos o sitios históricos de Nicaragua.
 
-    Responde en HTML usando:
-    <p>
-    <strong>
-    <br>
+    Responde usando HTML:
+    <p>, <strong>, <br>
 
     Incluye:
-
     - ¿Es de Nicaragua?
     - Lugar detectado
     - Departamento
     - Historia
     - Descripción turística
-
-    Si no es de Nicaragua explícalo.
     `;
 
     try {
@@ -284,6 +272,104 @@ async function enviarAGemini(base64Image) {
                 "Content-Type": "application/json"
             },
 
+            body: JSON.stringify({
+
+                contents: [
+                    {
+                        parts: [
+
+                            {
+                                text: prompt
+                            },
+
+                            {
+                                inlineData: {
+                                    mimeType: "image/jpeg",
+                                    data: base64Image
+                                }
+                            }
+
+                        ]
+                    }
+                ]
+
+            })
+
+        });
+
+        const data = await response.json();
+
+        console.log(data);
+
+        let textoRespuesta = "";
+
+        try {
+
+            textoRespuesta =
+                data.candidates[0].content.parts[0].text;
+
+        } catch (e) {
+
+            console.log(data);
+
+            if (data.error) {
+
+                textoRespuesta = `
+                    <p>
+                        <strong>Error Gemini:</strong><br>
+                        ${data.error.message}
+                    </p>
+                `;
+
+            } else {
+
+                textoRespuesta = `
+                    <p>
+                        <strong>Error:</strong><br>
+                        Gemini devolvió una estructura inesperada.
+                    </p>
+                `;
+
+            }
+
+        }
+
+        resultText.innerHTML = textoRespuesta;
+
+        resultContainer.style.display = "block";
+
+        currentScanResult = {
+
+            id: Date.now(),
+
+            fecha: new Date().toLocaleDateString('es-NI'),
+
+            htmlContent: textoRespuesta
+
+        };
+
+        btnSaveCurrent.style.display = "block";
+
+    } catch (error) {
+
+        console.error(error);
+
+        resultText.innerHTML = `
+            <p>
+                <strong>Error:</strong><br>
+                ${error.message}
+            </p>
+        `;
+
+        resultContainer.style.display = "block";
+
+    } finally {
+
+        loader.style.display = "none";
+
+    }
+
+}
             body: JSON.stringify({
 
                 contents: [
