@@ -1,8 +1,8 @@
 // ===============================
-// APP.JS REPARADO PARA NETLIFY
+// APP.JS LIMPIO Y CORRECTO
 // ===============================
 
-// Elementos de la interfaz
+// Elementos UI
 const video = document.getElementById('camera-feed');
 const preview = document.getElementById('photo-preview');
 const canvas = document.getElementById('capture-canvas');
@@ -75,7 +75,7 @@ async function startCamera() {
 
     } catch (err) {
 
-        console.warn("Cámara no disponible.");
+        console.log(err);
 
         btnCapture.style.display = "none";
 
@@ -100,7 +100,7 @@ function stopCamera() {
 
 
 // ===============================
-// OBTENER GPS
+// OBTENER UBICACIÓN
 // ===============================
 
 function obtenerUbicacion() {
@@ -118,7 +118,7 @@ function obtenerUbicacion() {
 
             () => {
 
-                console.log("GPS denegado.");
+                console.log("GPS denegado");
 
             }
 
@@ -240,18 +240,24 @@ btnRetake.addEventListener('click', () => {
 async function enviarAGemini(base64Image) {
 
     loader.style.display = "block";
+
     resultContainer.style.display = "none";
 
     const prompt = `
-    Eres un historiador experto y guía turístico de Nicaragua.
+    Eres un experto historiador y guía turístico de Nicaragua.
 
-    Analiza esta foto usando también esta ubicación aproximada:
+    Analiza esta imagen utilizando también esta ubicación:
     ${userCoords}
 
-    Detecta lugares turísticos, volcanes, lagos,
-    monumentos o sitios históricos de Nicaragua.
+    Detecta:
+    volcanes,
+    lagos,
+    ciudades,
+    monumentos,
+    iglesias,
+    lugares históricos o turísticos.
 
-    Responde usando HTML:
+    Responde en HTML usando:
     <p>, <strong>, <br>
 
     Incluye:
@@ -271,6 +277,107 @@ async function enviarAGemini(base64Image) {
             headers: {
                 "Content-Type": "application/json"
             },
+
+            body: JSON.stringify({
+
+                contents: [
+                    {
+                        parts: [
+
+                            {
+                                text: prompt
+                            },
+
+                            {
+                                inlineData: {
+                                    mimeType: "image/jpeg",
+                                    data: base64Image
+                                }
+                            }
+
+                        ]
+                    }
+                ]
+
+            })
+
+        });
+
+        const data = await response.json();
+
+        console.log(data);
+
+        let textoRespuesta = "";
+
+        try {
+
+            textoRespuesta =
+                data.candidates[0].content.parts[0].text;
+
+        } catch (e) {
+
+            console.log(data);
+
+            if (data.error) {
+
+                textoRespuesta = `
+                    <p>
+                        <strong>Error Gemini:</strong><br>
+                        ${data.error.message}
+                    </p>
+                `;
+
+            } else {
+
+                textoRespuesta = `
+                    <p>
+                        <strong>Error:</strong><br>
+                        Gemini devolvió una respuesta inesperada.
+                    </p>
+                `;
+
+            }
+
+        }
+
+        resultText.innerHTML = textoRespuesta;
+
+        resultContainer.style.display = "block";
+
+        currentScanResult = {
+
+            id: Date.now(),
+
+            fecha: new Date().toLocaleDateString('es-NI'),
+
+            htmlContent: textoRespuesta
+
+        };
+
+        btnSaveCurrent.style.display = "block";
+
+    } catch (error) {
+
+        console.log(error);
+
+        resultText.innerHTML = `
+            <p>
+                <strong>Error:</strong><br>
+                ${error.message}
+            </p>
+        `;
+
+        resultContainer.style.display = "block";
+
+    } finally {
+
+        loader.style.display = "none";
+
+    }
+
+}
+
+
 // ===============================
 // GUARDAR RESULTADOS
 // ===============================
