@@ -317,20 +317,56 @@ async function enviarAGemini(base64Image) {
 
         console.log(data);
 
-        if (
-            data.candidates &&
-            data.candidates.length > 0 &&
-            data.candidates[0].content &&
-            data.candidates[0].content.parts
-        ) {
+        console.log(data);
 
-            const textoRespuesta =
-                data.candidates[0].content.parts[0].text;
+let textoRespuesta = "";
 
-            resultText.innerHTML = textoRespuesta;
+try {
 
-            resultContainer.style.display = "block";
+    textoRespuesta =
+        data.candidates[0].content.parts[0].text;
 
+} catch (e) {
+
+    console.log("Respuesta completa:", data);
+
+    if (data.error) {
+
+        textoRespuesta = `
+            <p>
+                <strong>Error Gemini:</strong><br>
+                ${data.error.message}
+            </p>
+        `;
+
+    } else {
+
+        textoRespuesta = `
+            <p>
+                <strong>Error:</strong><br>
+                Gemini devolvió una estructura inesperada.
+            </p>
+        `;
+
+    }
+
+}
+
+resultText.innerHTML = textoRespuesta;
+
+resultContainer.style.display = "block";
+
+currentScanResult = {
+
+    id: Date.now(),
+
+    fecha: new Date().toLocaleDateString('es-NI'),
+
+    htmlContent: textoRespuesta
+
+};
+
+btnSaveCurrent.style.display = "block";
             currentScanResult = {
 
                 id: Date.now(),
